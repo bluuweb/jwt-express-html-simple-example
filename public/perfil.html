@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Perfil</title>
+    </head>
+    <body>
+        <div id="contenido"></div>
+
+        <script>
+            const contenido = document.getElementById("contenido");
+
+            if (!localStorage.getItem("token")) {
+                window.location.href = "/";
+            }
+
+            fetch("/perfil", {
+                method: "post",
+                headers: {
+                    authorization: "Bearer " + localStorage.getItem("token"),
+                },
+            })
+                .then((res) => {
+                    if (!res.ok) return (window.location.href = "/");
+                    return res.json();
+                })
+                .then((data) => {
+                    contenido.innerHTML = `<h1>Bienvenido: ${data.user.email}</h1>`;
+                })
+                .catch((e) => console.log(e));
+        </script>
+    </body>
+</html>

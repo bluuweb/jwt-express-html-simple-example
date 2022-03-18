@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>JWT</title>
+    </head>
+    <body>
+        <h1>Login simple JWT</h1>
+        <form id="formulario">
+            <input
+                type="email"
+                name="email"
+                value="test1@test.com"
+                id="email"
+            />
+            <input
+                type="password"
+                name="password"
+                value="123123"
+                id="password"
+            />
+            <button type="submit">Acceder</button>
+        </form>
+
+        <div id="mensaje"></div>
+
+        <script>
+            const formulario = document.getElementById("formulario");
+            const mensaje = document.getElementById("mensaje");
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+
+            formulario.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const res = await fetch("/login", {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email.value,
+                        password: password.value,
+                    }),
+                });
+                if (!res.ok) {
+                    const { msg } = await res.json();
+                    return (mensaje.innerHTML = `<p>${msg}</p>`);
+                }
+
+                const { token } = await res.json();
+                localStorage.setItem("token", token);
+                window.location.href = "/perfil";
+            });
+        </script>
+    </body>
+</html>
